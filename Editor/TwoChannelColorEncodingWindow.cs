@@ -108,7 +108,7 @@ namespace TwoChannelColorEncoding
             _generatePreviews = EditorGUILayout.Toggle(GC_GeneratePreviews, _generatePreviews);
 
             EditorGUILayout.Space(4);
-            EditorGUILayout.LabelField("Channel Packing", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Channel Packing (optional)", EditorStyles.boldLabel);
 
             _extraTextureB = (Texture2D)EditorGUILayout.ObjectField(GC_ExtraTexB, _extraTextureB, typeof(Texture2D), false);
             if (_extraTextureB != null)
