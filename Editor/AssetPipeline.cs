@@ -228,7 +228,7 @@ namespace TwoChannelColorEncoding
         {
             RenderTexture rt = RenderTexture.GetTemporary(
                 source.width, source.height, 0,
-                RenderTextureFormat.Default, RenderTextureReadWrite.Default);
+                RenderTextureFormat.Default, RenderTextureReadWrite.Linear);
             Graphics.Blit(source, rt);
             RenderTexture prev = RenderTexture.active;
             RenderTexture.active = rt;

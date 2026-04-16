@@ -35,9 +35,10 @@ namespace TwoChannelColorEncoding
             return t;
         }
 
-        public static Vector3 DecodeColor(float encodedLum, float t, Vector3 bc1, Vector3 bc2)
+        public static Vector3 DecodeColor(float encodedLum, float t, Vector3 bc1, Vector3 bc2, bool clampT)
         {
-            Vector3 color = Vector3.Lerp(bc1, bc2, Mathf.Clamp01(t));
+            float tt = clampT ? Mathf.Clamp01(t) : t;
+            Vector3 color = Vector3.LerpUnclamped(bc1, bc2, tt);
             float colorLum = ColorSpace.Luminance(color);
             float targetLum = DecodeLuminance(encodedLum);
             if (colorLum > EncodingConstants.Epsilon_LuminanceFloor)

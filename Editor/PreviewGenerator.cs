@@ -26,8 +26,8 @@ namespace TwoChannelColorEncoding
                 float encLum = data.encodedPixels[i].r;
                 float t = data.hueValues[i];
 
-                Vector3 dec = ColorEncoding.DecodeColor(encLum, t, bc1, bc2);
-                decodedColors[i] = new Color(Mathf.Clamp01(dec.x), Mathf.Clamp01(dec.y), Mathf.Clamp01(dec.z), 1f);
+                Vector3 dec = ColorEncoding.DecodeColor(encLum, t, bc1, bc2, false);
+                decodedColors[i] = ColorSpace.LinearToGamma(dec, assets.asset.gamma);
 
                 float err = Vector3.Magnitude(linear - dec);
                 pixelErrors[i] = err;
@@ -49,7 +49,7 @@ namespace TwoChannelColorEncoding
             hueColors.Dispose();
             pixelErrors.Dispose();
 
-            GeneratePlaneVisualization(data.bc1, data.bc2, ref assets);
+            GeneratePlaneVisualization(data.bc1, data.bc2, assets.asset.gamma, ref assets);
         }
 
         static Texture2D CreateTexture(int w, int h, NativeArray<Color> pixels)
@@ -79,7 +79,7 @@ namespace TwoChannelColorEncoding
             return c;
         }
 
-        static void GeneratePlaneVisualization(Vector3 bc1, Vector3 bc2, ref EncodingAssets assets)
+        static void GeneratePlaneVisualization(Vector3 bc1, Vector3 bc2, float gamma, ref EncodingAssets assets)
         {
             const int size = 256;
             int total = size * size;
@@ -101,7 +101,8 @@ namespace TwoChannelColorEncoding
                     float v = ((float)y / size - 0.5f) * 2f * maxR;
 
                     Vector3 pt = u * fx + v * fy;
-                    Color c = new Color(Mathf.Clamp01(pt.x), Mathf.Clamp01(pt.y), Mathf.Clamp01(pt.z), 0.3f);
+                    Color c = ColorSpace.LinearToGamma(pt, gamma);
+                    c.a = 0.3f;
 
                     if (DistanceToLineSegment(new Vector2(u, v), a2, b2) < maxR * 0.02f)
                         c = Color.Lerp(c, new Color(1f, 1f, 1f, 1f), 0.7f);

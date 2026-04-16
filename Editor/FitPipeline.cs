@@ -75,7 +75,7 @@ namespace TwoChannelColorEncoding
                 data.hueValues[i] = t;
                 data.encodedPixels[i] = new Color(encLum, t, 0f, 1f);
 
-                Vector3 decoded = ColorEncoding.DecodeColor(encLum, t, bc1, bc2);
+                Vector3 decoded = ColorEncoding.DecodeColor(encLum, t, bc1, bc2, clamp);
                 Vector3 diff = linear - decoded;
                 float e2 = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
                 sumError2 += e2;

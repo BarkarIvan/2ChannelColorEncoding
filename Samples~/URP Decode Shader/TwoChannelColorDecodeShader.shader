@@ -72,7 +72,8 @@ Shader "TwoChannelColor/Decode Unlit"
             half4 frag(Varyings input) : SV_Target
             {
                 float2 data = SAMPLE_TEXTURE2D(_EncodedTex, sampler_EncodedTex, input.uv).rg;
-                float3 color = Decode2ChannelColor(data, _BC1, _BC2);
+                float invGamma = 1.0 / _DecodeGamma;
+                float3 color = Decode2ChannelColorToGamma(data, _BC1, _BC2, invGamma);
                 color = MixFog(color, input.fogFactor);
                 return half4(color, 1.0);
             }

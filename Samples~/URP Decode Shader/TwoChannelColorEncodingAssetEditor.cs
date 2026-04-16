@@ -14,11 +14,8 @@ namespace TwoChannelColorEncoding
 
             TwoChannelColorEncodingAsset asset = (TwoChannelColorEncodingAsset)target;
 
-            if (GUILayout.Button("Create Material (Unlit)", GUILayout.Height(28)))
+            if (GUILayout.Button("Create Material", GUILayout.Height(28)))
                 CreateMaterialForAsset(asset, "TwoChannelColor/Decode Unlit");
-
-            if (GUILayout.Button("Create Material (Lit)", GUILayout.Height(28)))
-                CreateMaterialForAsset(asset, "TwoChannelColor/Decode Lit");
 
             EditorGUILayout.Space(4);
 
