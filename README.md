@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="preview.png" alt="Encoding window preview" width="600">
+</p>
+
 <div align="center">
 
 # 2ChannelColorEncoding
@@ -65,10 +69,6 @@ using the method from **GPU Pro 5 — "Reducing Texture Memory Usage by 2-Channe
 </div>
 
 <br>
-
-<p align="center">
-  <img src="preview.png" alt="Encoding window preview" width="600">
-</p>
 
 The tool analyzes the source texture, fits a color plane in RGB space, extracts two base colors from the plane/cube intersection, and encodes each texel as:
 
