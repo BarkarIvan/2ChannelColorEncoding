@@ -1,0 +1,19 @@
+{
+  "name": "TwoChannelColorEncoding.Samples.URPDecodeShader",
+  "rootNamespace": "TwoChannelColorEncoding.Samples",
+  "references": [
+    "TwoChannelColorEncoding.Runtime",
+    "TwoChannelColorEncoding.Editor"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

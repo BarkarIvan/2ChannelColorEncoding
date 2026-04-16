@@ -1,0 +1,27 @@
+{
+  "name": "com.unitycgchat.2channelcolorencoding",
+  "displayName": "2-Channel Color Encoding",
+  "version": "1.0.0",
+  "description": "Converts color textures into 2-channel encoded textures using the GPU Pro 5 method. Reduces texture memory by encoding RGB through a fitted color plane into RG channels with luminance and hue factor.",
+  "unity": "2020.3",
+  "unityRelease": "0f1",
+  "dependencies": {},
+  "keywords": [
+    "texture",
+    "compression",
+    "color",
+    "encoding",
+    "memory",
+    "gpu"
+  ],
+  "author": {
+    "name": "Barkar Ivan"
+  },
+  "samples": [
+    {
+      "displayName": "URP Decode Shader",
+      "description": "Ready-to-use URP shaders (Unlit and Lit) with a Custom Inspector button to auto-create materials from encoding assets.",
+      "path": "Samples~/URP Decode Shader"
+    }
+  ]
+}
