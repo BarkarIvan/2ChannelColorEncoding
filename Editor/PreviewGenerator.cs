@@ -27,7 +27,7 @@ namespace TwoChannelColorEncoding
                 float t = data.hueValues[i];
 
                 Vector3 dec = ColorEncoding.DecodeColor(encLum, t, bc1, bc2);
-                decodedColors[i] = ColorSpace.LinearToSRGB(dec);
+                decodedColors[i] = new Color(Mathf.Clamp01(dec.x), Mathf.Clamp01(dec.y), Mathf.Clamp01(dec.z), 1f);
 
                 float err = Vector3.Magnitude(linear - dec);
                 pixelErrors[i] = err;

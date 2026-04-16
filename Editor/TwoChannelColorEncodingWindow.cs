@@ -6,14 +6,14 @@ namespace TwoChannelColorEncoding
 {
     public class TwoChannelColorEncodingWindow : EditorWindow
     {
-        static readonly GUIContent GC_SourceTexture = new GUIContent("Source Texture", "Color/albedo texture to encode. Treated as sRGB input.");
-        static readonly GUIContent GC_Gamma = new GUIContent("Gamma", "Power for sRGB→linear approximation. pow(c, gamma). Default 2.0 matches standard sRGB curve.");
+        static readonly GUIContent GC_SourceTexture = new GUIContent("Source Texture", "Color/albedo texture to encode. Values are treated as gamma/sRGB-like input.");
+        static readonly GUIContent GC_Gamma = new GUIContent("Gamma", "Power curve for sRGB→linear approximation. pow(c, gamma). Default 2.0 matches the article's method.");
         static readonly GUIContent GC_ChannelWeights = new GUIContent("Channel Weights", "Per-channel weighting for plane fitting. Higher weight makes that channel more important in the fit.");
         static readonly GUIContent GC_WeightR = new GUIContent("R", "Weight for the Red channel during plane fitting.");
         static readonly GUIContent GC_WeightG = new GUIContent("G", "Weight for the Green channel during plane fitting. Higher default reflects human eye sensitivity.");
         static readonly GUIContent GC_WeightB = new GUIContent("B", "Weight for the Blue channel during plane fitting.");
         static readonly GUIContent GC_UseEigenSolve = new GUIContent("Use Eigen Solve", "Use Jacobi eigenvector method for plane fitting (faster, more accurate). Disable to use brute-force sphere sampling instead.");
-        static readonly GUIContent GC_ClampHueFactor = new GUIContent("Clamp Hue Factor", "Clamp the hue interpolation factor t to [0,1]. Prevents extrapolation beyond bc1–bc2 but may round-trip worse for wide gamut textures.");
+        static readonly GUIContent GC_ClampHueFactor = new GUIContent("Clamp Hue Factor", "Clamp the hue interpolation factor t to [0,1]. Optional safety mode — may worsen round-trip for wide gamut textures. Default off per article.");
         static readonly GUIContent GC_Overwrite = new GUIContent("Overwrite Existing", "Overwrite existing encoded texture and metadata assets without confirmation.");
         static readonly GUIContent GC_GeneratePreviews = new GUIContent("Generate Previews", "Create decoded, error heatmap, hue factor and plane debug preview textures after encoding.");
         static readonly GUIContent GC_PreviewSize = new GUIContent("Preview Size", "Width/height of the preview thumbnails in pixels.");
@@ -27,7 +27,7 @@ namespace TwoChannelColorEncoding
         float _gamma = 2.0f;
         Vector3 _channelWeights = new Vector3(0.5f, 1.0f, 0.25f);
         bool _useEigenSolve = true;
-        bool _clampHueFactor = true;
+        bool _clampHueFactor = false;
         bool _overwrite;
         bool _generatePreviews = true;
         string _outputFolder = "";

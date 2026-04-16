@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEditor;
 
 namespace TwoChannelColorEncoding
 {
@@ -12,10 +11,16 @@ namespace TwoChannelColorEncoding
         Alpha
     }
 
-    public enum OutputFileFormat
+    public enum CompressionFormat
     {
-        PNG,
-        TGA
+        BC5,
+        BC7,
+        DXT5,
+        EAC_RG,
+        ASTC4x4,
+        ASTC6x6,
+        RGBA32,
+        RG16
     }
 
     [CreateAssetMenu(fileName = "TwoChannelColorEncodingAsset", menuName = "Encoding/2-Channel Color Encoding")]
@@ -30,7 +35,7 @@ namespace TwoChannelColorEncoding
         public Vector2Int sourceSize;
         public float rmsError;
         public float maxError;
-        public bool clampHueFactor = true;
+        public bool clampHueFactor = false;
         public string sourceAssetPath;
 
         [Header("Channel Packing")]
@@ -40,7 +45,7 @@ namespace TwoChannelColorEncoding
         public ChannelSource extraSourceA = ChannelSource.None;
 
         [Header("Compression")]
-        public TextureImporterFormat compression = TextureImporterFormat.BC5;
+        public CompressionFormat compression = CompressionFormat.BC5;
 
         public bool IsPacked => extraSourceB != ChannelSource.None || extraSourceA != ChannelSource.None;
 

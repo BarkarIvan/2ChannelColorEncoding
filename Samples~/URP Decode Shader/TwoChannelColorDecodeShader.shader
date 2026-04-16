@@ -5,7 +5,7 @@ Shader "TwoChannelColor/Decode Unlit"
         _EncodedTex ("Encoded Texture (RG)", 2D) = "white" {}
         _BC1 ("Base Color 1 (Linear RGB)", Vector) = (1, 0, 0, 0)
         _BC2 ("Base Color 2 (Linear RGB)", Vector) = (0, 1, 0, 0)
-        _DecodeGamma ("Decode Gamma", Float) = 2.2
+        _DecodeGamma ("Decode Gamma", Float) = 2.0
         [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull", Float) = 2
         [Enum(Off,0,On,1)] _ZWrite ("ZWrite", Float) = 1
         [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest ("ZTest", Float) = 4
@@ -72,10 +72,9 @@ Shader "TwoChannelColor/Decode Unlit"
             half4 frag(Varyings input) : SV_Target
             {
                 float2 data = SAMPLE_TEXTURE2D(_EncodedTex, sampler_EncodedTex, input.uv).rg;
-                float3 linearColor = Decode2ChannelColor(data, _BC1, _BC2);
-                float3 displayColor = pow(max(linearColor, (float3)0), 1.0 / _DecodeGamma);
-                displayColor = MixFog(displayColor, input.fogFactor);
-                return half4(displayColor, 1.0);
+                float3 color = Decode2ChannelColor(data, _BC1, _BC2);
+                color = MixFog(color, input.fogFactor);
+                return half4(color, 1.0);
             }
             ENDHLSL
         }

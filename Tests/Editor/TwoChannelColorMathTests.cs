@@ -204,15 +204,6 @@ namespace TwoChannelColorEncoding.Tests
         }
 
         [Test]
-        public void ToLinearRGB_Gamma2_Squared()
-        {
-            Vector3 linear = ColorSpace.ToLinearRGB(new Color(0.5f, 0.5f, 0.5f, 1f), 2.0f);
-            Assert.AreEqual(0.25f, linear.x, Epsilon);
-            Assert.AreEqual(0.25f, linear.y, Epsilon);
-            Assert.AreEqual(0.25f, linear.z, Epsilon);
-        }
-
-        [Test]
         public void AreBaseColorsDegenerate_Parallel_ReturnsTrue()
         {
             Assert.IsTrue(ColorEncoding.AreBaseColorsDegenerate(new Vector3(1, 0, 0), new Vector3(0.99f, 0, 0)));
@@ -233,6 +224,15 @@ namespace TwoChannelColorEncoding.Tests
             Assert.AreEqual(0f, m.gg, Epsilon);
             Assert.AreEqual(0f, m.bb, Epsilon);
             Assert.AreEqual(0f, m.rg, Epsilon);
+        }
+
+        [Test]
+        public void ToLinearRGB_Gamma2_Squared()
+        {
+            Vector3 linear = ColorSpace.ToLinearRGB(new Color(0.5f, 0.5f, 0.5f, 1f), 2.0f);
+            Assert.AreEqual(0.25f, linear.x, Epsilon);
+            Assert.AreEqual(0.25f, linear.y, Epsilon);
+            Assert.AreEqual(0.25f, linear.z, Epsilon);
         }
 
         [Test]
@@ -262,11 +262,12 @@ namespace TwoChannelColorEncoding.Tests
         }
 
         [Test]
-        public void LinearToSRGB_RoundTrip()
+        public void LinearToGamma_RoundTrip()
         {
             Vector3 original = new Vector3(0.5f, 0.3f, 0.8f);
-            Color srgb = ColorSpace.LinearToSRGB(original);
-            Assert.IsTrue(srgb.r > original.x, "sRGB should be brighter than linear for mid-values");
+            Color gamma = ColorSpace.LinearToGamma(original, 2.0f);
+            Assert.IsTrue(gamma.r > original.x, "gamma-corrected should be brighter than linear for mid-values");
+            Assert.IsTrue(gamma.r < 1f, "gamma-corrected should be less than 1 for non-white input");
         }
     }
 }

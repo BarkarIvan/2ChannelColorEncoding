@@ -65,7 +65,7 @@ namespace TwoChannelColorEncoding
             for (int i = 0; i < len; i++)
             {
                 Color c = sourcePixels[i];
-                Vector3 linear = ColorSpace.ToLinearRGB(c.r, c.g, c.b, gamma);
+                Vector3 linear = ColorSpace.ToLinearRGB(c, gamma);
                 data.linearPixels[i] = linear;
 
                 float lum = ColorSpace.Luminance(linear);

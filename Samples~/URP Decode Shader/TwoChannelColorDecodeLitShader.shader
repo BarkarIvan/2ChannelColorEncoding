@@ -5,7 +5,7 @@ Shader "TwoChannelColor/Decode Lit"
         _EncodedTex ("Encoded Texture (RG)", 2D) = "white" {}
         _BC1 ("Base Color 1 (Linear RGB)", Vector) = (1, 0, 0, 0)
         _BC2 ("Base Color 2 (Linear RGB)", Vector) = (0, 1, 0, 0)
-        _DecodeGamma ("Decode Gamma", Float) = 2.2
+        _DecodeGamma ("Decode Gamma", Float) = 2.0
         _Smoothness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
         [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull", Float) = 2
@@ -86,8 +86,7 @@ Shader "TwoChannelColor/Decode Lit"
             half4 frag(Varyings input) : SV_Target
             {
                 float2 data = SAMPLE_TEXTURE2D(_EncodedTex, sampler_EncodedTex, input.uv).rg;
-                float3 albedoLinear = Decode2ChannelColor(data, _BC1, _BC2);
-                float3 albedo = pow(max(albedoLinear, (float3)0), 1.0 / _DecodeGamma);
+                float3 albedo = Decode2ChannelColor(data, _BC1, _BC2);
 
                 InputData inputData = (InputData)0;
                 inputData.positionWS = input.positionWS;
@@ -247,8 +246,8 @@ Shader "TwoChannelColor/Decode Lit"
             half4 MetaFrag(MetaVaryings input) : SV_Target
             {
                 float2 data = SAMPLE_TEXTURE2D(_EncodedTex, sampler_EncodedTex, input.uv).rg;
-                float3 albedoLinear = Decode2ChannelColor(data, _BC1, _BC2);
-                float3 albedo = pow(max(albedoLinear, (float3)0), 1.0 / _DecodeGamma);
+                float invGamma = 1.0 / _DecodeGamma;
+                float3 albedo = Decode2ChannelColorToGamma(data, _BC1, _BC2, invGamma);
 
                 UnityMetaInput meta = (UnityMetaInput)0;
                 meta.Albedo = albedo;

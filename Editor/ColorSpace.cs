@@ -11,11 +11,6 @@ namespace TwoChannelColorEncoding
                  + rgb.z * EncodingConstants.LuminanceB;
         }
 
-        public static Vector3 ToLinearRGB(float r, float g, float b, float gamma)
-        {
-            return new Vector3(Mathf.Pow(r, gamma), Mathf.Pow(g, gamma), Mathf.Pow(b, gamma));
-        }
-
         public static Vector3 ToLinearRGB(Color pixel, float gamma)
         {
             return new Vector3(
@@ -25,12 +20,13 @@ namespace TwoChannelColorEncoding
             );
         }
 
-        public static Color LinearToSRGB(Vector3 linear)
+        public static Color LinearToGamma(Vector3 linear, float gamma)
         {
+            float invGamma = 1f / gamma;
             return new Color(
-                Mathf.Pow(Mathf.Clamp01(linear.x), 1f / 2.2f),
-                Mathf.Pow(Mathf.Clamp01(linear.y), 1f / 2.2f),
-                Mathf.Pow(Mathf.Clamp01(linear.z), 1f / 2.2f),
+                Mathf.Pow(Mathf.Clamp01(linear.x), invGamma),
+                Mathf.Pow(Mathf.Clamp01(linear.y), invGamma),
+                Mathf.Pow(Mathf.Clamp01(linear.z), invGamma),
                 1f
             );
         }

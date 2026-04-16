@@ -130,7 +130,7 @@ namespace TwoChannelColorEncoding
             metaAsset.extraSourceB = settings.extraSourceB;
             metaAsset.extraTextureA = settings.extraTextureA;
             metaAsset.extraSourceA = settings.extraSourceA;
-            metaAsset.compression = settings.compression;
+            metaAsset.compression = ToCompressionFormat(settings.compression);
 
             if (!existingMeta)
                 AssetDatabase.CreateAsset(metaAsset, metaPath);
@@ -154,6 +154,10 @@ namespace TwoChannelColorEncoding
             importer.wrapMode = TextureWrapMode.Clamp;
             importer.filterMode = FilterMode.Bilinear;
 
+            TextureImporterFormat mobileFormat = isPacked
+                ? TextureImporterFormat.ASTC_6x6
+                : TextureImporterFormat.EAC_RG;
+
             var pc = new TextureImporterPlatformSettings
             {
                 name = "PC",
@@ -168,7 +172,7 @@ namespace TwoChannelColorEncoding
             {
                 name = "iPhone",
                 overridden = true,
-                format = format,
+                format = mobileFormat,
                 compressionQuality = (int)TextureCompressionQuality.Normal,
                 maxTextureSize = 4096
             };
@@ -178,7 +182,7 @@ namespace TwoChannelColorEncoding
             {
                 name = "Android",
                 overridden = true,
-                format = format,
+                format = mobileFormat,
                 compressionQuality = (int)TextureCompressionQuality.Normal,
                 maxTextureSize = 4096
             };
@@ -187,19 +191,25 @@ namespace TwoChannelColorEncoding
             importer.SaveAndReimport();
         }
 
+        static CompressionFormat ToCompressionFormat(TextureImporterFormat format)
+        {
+            switch (format)
+            {
+                case TextureImporterFormat.BC5: return CompressionFormat.BC5;
+                case TextureImporterFormat.BC7: return CompressionFormat.BC7;
+                case TextureImporterFormat.DXT5: return CompressionFormat.DXT5;
+                case TextureImporterFormat.EAC_RG: return CompressionFormat.EAC_RG;
+                case TextureImporterFormat.ASTC_4x4: return CompressionFormat.ASTC4x4;
+                case TextureImporterFormat.ASTC_6x6: return CompressionFormat.ASTC6x6;
+                case TextureImporterFormat.RGBA32: return CompressionFormat.RGBA32;
+                case TextureImporterFormat.RG16: return CompressionFormat.RG16;
+                default: return CompressionFormat.BC5;
+            }
+        }
+
         public static NativeArray<Color> GetPixelData(Texture2D source)
         {
             if (source == null) return default;
-
-            if (source.isReadable)
-            {
-                TextureFormat fmt = source.format;
-                if (fmt == TextureFormat.RGBAFloat || fmt == TextureFormat.RGBA64 ||
-                    fmt == TextureFormat.RGFloat || fmt == TextureFormat.RHalf)
-                {
-                    return source.GetRawTextureData<Color>();
-                }
-            }
 
             Texture2D readable = MakeReadableCopy(source);
             var data = readable.GetRawTextureData<Color>();
@@ -218,7 +228,7 @@ namespace TwoChannelColorEncoding
         {
             RenderTexture rt = RenderTexture.GetTemporary(
                 source.width, source.height, 0,
-                RenderTextureFormat.Default, RenderTextureReadWrite.Linear);
+                RenderTextureFormat.Default, RenderTextureReadWrite.Default);
             Graphics.Blit(source, rt);
             RenderTexture prev = RenderTexture.active;
             RenderTexture.active = rt;

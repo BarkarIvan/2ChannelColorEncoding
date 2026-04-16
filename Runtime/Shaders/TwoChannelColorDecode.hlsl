@@ -10,10 +10,10 @@ float3 Decode2ChannelColor(float2 data, float3 bc1, float3 bc2)
     return color;
 }
 
-float3 Decode2ChannelColorToGamma(float2 data, float3 bc1, float3 bc2)
+float3 Decode2ChannelColorToGamma(float2 data, float3 bc1, float3 bc2, float invGamma)
 {
     float3 linColor = Decode2ChannelColor(data, bc1, bc2);
-    return pow(max(linColor, (float3)0), 1.0 / 2.2);
+    return pow(max(linColor, (float3)0), invGamma);
 }
 
 float3 Decode2ChannelColorExact(float2 data, float3 bc1, float3 bc2, float invGamma)
