@@ -20,9 +20,8 @@ namespace TwoChannelColorEncoding
             );
         }
 
-        public static Color LinearToGamma(Vector3 linear, float gamma)
+        public static Color LinearToGamma(Vector3 linear, float invGamma)
         {
-            float invGamma = 1f / gamma;
             return new Color(
                 Mathf.Pow(Mathf.Clamp01(linear.x), invGamma),
                 Mathf.Pow(Mathf.Clamp01(linear.y), invGamma),

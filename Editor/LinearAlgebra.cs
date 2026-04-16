@@ -132,7 +132,7 @@ namespace TwoChannelColorEncoding
         public static Vector3 GetOrthogonal(Vector3 v)
         {
             Vector3 ortho = Vector3.Cross(v, Vector3.up);
-            if (ortho.magnitude < EncodingConstants.Epsilon_Normalized)
+            if (ortho.sqrMagnitude < EncodingConstants.Epsilon_Normalized * EncodingConstants.Epsilon_Normalized)
                 ortho = Vector3.Cross(v, Vector3.right);
             return ortho.normalized;
         }

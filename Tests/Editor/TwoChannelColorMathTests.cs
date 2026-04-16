@@ -265,7 +265,7 @@ namespace TwoChannelColorEncoding.Tests
         public void LinearToGamma_RoundTrip()
         {
             Vector3 original = new Vector3(0.5f, 0.3f, 0.8f);
-            Color gamma = ColorSpace.LinearToGamma(original, 2.0f);
+            Color gamma = ColorSpace.LinearToGamma(original, 0.5f);
             Assert.IsTrue(gamma.r > original.x, "gamma-corrected should be brighter than linear for mid-values");
             Assert.IsTrue(gamma.r < 1f, "gamma-corrected should be less than 1 for non-white input");
         }

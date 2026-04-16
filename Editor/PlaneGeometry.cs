@@ -98,7 +98,7 @@ namespace TwoChannelColorEncoding
             fx = bc1.normalized;
             Vector3 proj = Vector3.Dot(fx, bc2) * fx;
             fy = (bc2 - proj).normalized;
-            if (fy.magnitude < EncodingConstants.Epsilon_Normalized)
+            if (fy.sqrMagnitude < EncodingConstants.Epsilon_Normalized * EncodingConstants.Epsilon_Normalized)
                 fy = LinearAlgebra.GetOrthogonal(fx);
         }
 

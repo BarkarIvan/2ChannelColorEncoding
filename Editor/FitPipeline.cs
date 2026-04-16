@@ -51,7 +51,7 @@ namespace TwoChannelColorEncoding
             float gamma = settings.gamma;
 
             double sumError2 = 0.0;
-            float maxE = 0f;
+            float maxE2 = 0f;
             double sumLumErr = 0.0;
             float hueMin = float.MaxValue;
             float hueMax = float.MinValue;
@@ -73,8 +73,7 @@ namespace TwoChannelColorEncoding
                 Vector3 diff = linear - decoded;
                 float e2 = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
                 sumError2 += e2;
-                float e = Mathf.Sqrt(e2);
-                if (e > maxE) maxE = e;
+                if (e2 > maxE2) maxE2 = e2;
 
                 float decLum = ColorSpace.Luminance(decoded);
                 sumLumErr += Mathf.Abs(lum - decLum);
@@ -86,7 +85,7 @@ namespace TwoChannelColorEncoding
             data.metrics = new ErrorMetrics
             {
                 rmsError = Mathf.Sqrt((float)(sumError2 / len)),
-                maxError = maxE,
+                maxError = Mathf.Sqrt(maxE2),
                 avgLuminanceError = (float)(sumLumErr / len),
                 avgHueRange = hueMax - hueMin
             };
