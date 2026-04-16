@@ -16,7 +16,7 @@ namespace TwoChannelColorEncoding
 
         public static float ComputeHueFactor(
             Vector3 pixelLinear, Vector3 bc1, Vector3 bc2,
-            Vector3 fx, Vector3 fy, bool clamp)
+            Vector3 fx, Vector3 fy)
         {
             Vector2 p2 = Project2D(pixelLinear, fx, fy);
             Vector2 a2 = Project2D(bc1, fx, fy);
@@ -29,16 +29,12 @@ namespace TwoChannelColorEncoding
                 return 0f;
 
             float crossA2P2 = Cross2D(a2, p2);
-            float t = crossA2P2 / crossP2B2mA;
-
-            if (clamp) t = Mathf.Clamp01(t);
-            return t;
+            return crossA2P2 / crossP2B2mA;
         }
 
-        public static Vector3 DecodeColor(float encodedLum, float t, Vector3 bc1, Vector3 bc2, bool clampT)
+        public static Vector3 DecodeColor(float encodedLum, float t, Vector3 bc1, Vector3 bc2)
         {
-            float tt = clampT ? Mathf.Clamp01(t) : t;
-            Vector3 color = Vector3.LerpUnclamped(bc1, bc2, tt);
+            Vector3 color = Vector3.LerpUnclamped(bc1, bc2, t);
             float colorLum = ColorSpace.Luminance(color);
             float targetLum = DecodeLuminance(encodedLum);
             if (colorLum > EncodingConstants.Epsilon_LuminanceFloor)

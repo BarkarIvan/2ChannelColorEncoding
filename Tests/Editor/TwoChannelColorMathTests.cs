@@ -72,7 +72,7 @@ namespace TwoChannelColorEncoding.Tests
             Vector3 bc1 = new Vector3(1, 0, 0);
             Vector3 bc2 = new Vector3(0, 1, 0);
             PlaneGeometry.BuildPlaneBasis(bc1, bc2, out Vector3 fx, out Vector3 fy);
-            float t = ColorEncoding.ComputeHueFactor(bc1, bc1, bc2, fx, fy, false);
+            float t = ColorEncoding.ComputeHueFactor(bc1, bc1, bc2, fx, fy);
             Assert.AreEqual(0f, t, Epsilon);
         }
 
@@ -82,7 +82,7 @@ namespace TwoChannelColorEncoding.Tests
             Vector3 bc1 = new Vector3(1, 0, 0);
             Vector3 bc2 = new Vector3(0, 1, 0);
             PlaneGeometry.BuildPlaneBasis(bc1, bc2, out Vector3 fx, out Vector3 fy);
-            float t = ColorEncoding.ComputeHueFactor(bc2, bc1, bc2, fx, fy, false);
+            float t = ColorEncoding.ComputeHueFactor(bc2, bc1, bc2, fx, fy);
             Assert.AreEqual(1f, t, Epsilon);
         }
 
@@ -93,30 +93,30 @@ namespace TwoChannelColorEncoding.Tests
             Vector3 bc2 = new Vector3(0, 1, 0);
             Vector3 mid = (bc1 + bc2) * 0.5f;
             PlaneGeometry.BuildPlaneBasis(bc1, bc2, out Vector3 fx, out Vector3 fy);
-            float t = ColorEncoding.ComputeHueFactor(mid, bc1, bc2, fx, fy, false);
+            float t = ColorEncoding.ComputeHueFactor(mid, bc1, bc2, fx, fy);
             Assert.AreEqual(0.5f, t, Epsilon);
         }
 
         [Test]
-        public void ComputeHueFactor_ClampNegative()
+        public void ComputeHueFactor_NegativeValue_Unclamped()
         {
             Vector3 bc1 = new Vector3(1, 0, 0);
             Vector3 bc2 = new Vector3(0, 1, 0);
             Vector3 testPt = -bc1 * 0.5f;
             PlaneGeometry.BuildPlaneBasis(bc1, bc2, out Vector3 fx, out Vector3 fy);
-            float t = ColorEncoding.ComputeHueFactor(testPt, bc1, bc2, fx, fy, true);
-            Assert.AreEqual(0f, t, Epsilon);
+            float t = ColorEncoding.ComputeHueFactor(testPt, bc1, bc2, fx, fy);
+            Assert.IsTrue(t < 0f, $"Expected negative t, got {t}");
         }
 
         [Test]
-        public void ComputeHueFactor_ClampAbove1()
+        public void ComputeHueFactor_AboveOne_Unclamped()
         {
             Vector3 bc1 = new Vector3(1, 0, 0);
             Vector3 bc2 = new Vector3(0, 1, 0);
-            Vector3 testPt = bc2 * 2f;
+            Vector3 testPt = new Vector3(-1f, 2f, 0f);
             PlaneGeometry.BuildPlaneBasis(bc1, bc2, out Vector3 fx, out Vector3 fy);
-            float t = ColorEncoding.ComputeHueFactor(testPt, bc1, bc2, fx, fy, true);
-            Assert.AreEqual(1f, t, Epsilon);
+            float t = ColorEncoding.ComputeHueFactor(testPt, bc1, bc2, fx, fy);
+            Assert.IsTrue(t > 1f, $"Expected t > 1, got {t}");
         }
 
         [Test]
@@ -185,7 +185,7 @@ namespace TwoChannelColorEncoding.Tests
             float encLum = ColorEncoding.EncodeLuminance(lum);
 
             PlaneGeometry.BuildPlaneBasis(bc1, bc2, out Vector3 fx, out Vector3 fy);
-            float t = ColorEncoding.ComputeHueFactor(original, bc1, bc2, fx, fy, true);
+            float t = ColorEncoding.ComputeHueFactor(original, bc1, bc2, fx, fy);
             Vector3 decoded = ColorEncoding.DecodeColor(encLum, t, bc1, bc2);
 
             Assert.AreEqual(lum, ColorSpace.Luminance(decoded), 0.01f);
@@ -246,7 +246,7 @@ namespace TwoChannelColorEncoding.Tests
             float encLum = ColorEncoding.EncodeLuminance(lum);
 
             PlaneGeometry.BuildPlaneBasis(bc1, bc2, out Vector3 fx, out Vector3 fy);
-            float t = ColorEncoding.ComputeHueFactor(original, bc1, bc2, fx, fy, true);
+            float t = ColorEncoding.ComputeHueFactor(original, bc1, bc2, fx, fy);
             Vector3 decoded = ColorEncoding.DecodeColor(encLum, t, bc1, bc2);
 
             Assert.AreEqual(lum, ColorSpace.Luminance(decoded), 0.02f);

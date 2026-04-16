@@ -5,18 +5,10 @@ using System.Collections.Generic;
 
 namespace TwoChannelColorEncoding
 {
-    public enum OutputFileFormat
-    {
-        PNG,
-        TGA
-    }
-
     public struct EncodingSettings
     {
         public float gamma;
         public Vector3 channelWeights;
-        public bool useEigenSolve;
-        public bool clampHueFactor;
         public string outputFolder;
         public bool overwrite;
         public bool generatePreviews;
@@ -32,8 +24,6 @@ namespace TwoChannelColorEncoding
         {
             gamma = 2.0f,
             channelWeights = new Vector3(0.5f, 1.0f, 0.25f),
-            useEigenSolve = true,
-            clampHueFactor = false,
             outputFolder = "",
             overwrite = false,
             generatePreviews = true,

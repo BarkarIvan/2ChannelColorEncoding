@@ -26,7 +26,7 @@ namespace TwoChannelColorEncoding
                 float encLum = data.encodedPixels[i].r;
                 float t = data.hueValues[i];
 
-                Vector3 dec = ColorEncoding.DecodeColor(encLum, t, bc1, bc2, false);
+                Vector3 dec = ColorEncoding.DecodeColor(encLum, t, bc1, bc2);
                 decodedColors[i] = ColorSpace.LinearToGamma(dec, assets.asset.gamma);
 
                 float err = Vector3.Magnitude(linear - dec);

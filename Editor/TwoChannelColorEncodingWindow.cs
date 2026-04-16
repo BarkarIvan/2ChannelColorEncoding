@@ -12,8 +12,6 @@ namespace TwoChannelColorEncoding
         static readonly GUIContent GC_WeightR = new GUIContent("R", "Weight for the Red channel during plane fitting.");
         static readonly GUIContent GC_WeightG = new GUIContent("G", "Weight for the Green channel during plane fitting. Higher default reflects human eye sensitivity.");
         static readonly GUIContent GC_WeightB = new GUIContent("B", "Weight for the Blue channel during plane fitting.");
-        static readonly GUIContent GC_UseEigenSolve = new GUIContent("Use Eigen Solve", "Use Jacobi eigenvector method for plane fitting (faster, more accurate). Disable to use brute-force sphere sampling instead.");
-        static readonly GUIContent GC_ClampHueFactor = new GUIContent("Clamp Hue Factor", "Clamp the hue interpolation factor t to [0,1]. Optional safety mode — may worsen round-trip for wide gamut textures. Default off per article.");
         static readonly GUIContent GC_Overwrite = new GUIContent("Overwrite Existing", "Overwrite existing encoded texture and metadata assets without confirmation.");
         static readonly GUIContent GC_GeneratePreviews = new GUIContent("Generate Previews", "Create decoded, error heatmap, hue factor and plane debug preview textures after encoding.");
         static readonly GUIContent GC_PreviewSize = new GUIContent("Preview Size", "Width/height of the preview thumbnails in pixels.");
@@ -26,8 +24,6 @@ namespace TwoChannelColorEncoding
         Texture2D _sourceTexture;
         float _gamma = 2.0f;
         Vector3 _channelWeights = new Vector3(0.5f, 1.0f, 0.25f);
-        bool _useEigenSolve = true;
-        bool _clampHueFactor = false;
         bool _overwrite;
         bool _generatePreviews = true;
         string _outputFolder = "";
@@ -108,8 +104,6 @@ namespace TwoChannelColorEncoding
             _channelWeights.z = EditorGUILayout.FloatField(GC_WeightB, _channelWeights.z);
             EditorGUI.indentLevel--;
 
-            _useEigenSolve = EditorGUILayout.Toggle(GC_UseEigenSolve, _useEigenSolve);
-            _clampHueFactor = EditorGUILayout.Toggle(GC_ClampHueFactor, _clampHueFactor);
             _overwrite = EditorGUILayout.Toggle(GC_Overwrite, _overwrite);
             _generatePreviews = EditorGUILayout.Toggle(GC_GeneratePreviews, _generatePreviews);
 
@@ -226,8 +220,6 @@ namespace TwoChannelColorEncoding
             {
                 gamma = _gamma,
                 channelWeights = _channelWeights,
-                useEigenSolve = _useEigenSolve,
-                clampHueFactor = _clampHueFactor,
                 outputFolder = _outputFolder,
                 overwrite = _overwrite,
                 generatePreviews = _generatePreviews,

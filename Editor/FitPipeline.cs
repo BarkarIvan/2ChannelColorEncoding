@@ -23,12 +23,7 @@ namespace TwoChannelColorEncoding
 
             ScatterMatrix scatter = ScatterMatrix.Accumulate(pixels, settings.gamma, settings.channelWeights);
 
-            Vector3 normal;
-            if (settings.useEigenSolve)
-                normal = LinearAlgebra.SmallestEigenvector(scatter);
-            else
-                normal = LinearAlgebra.BruteForceNormal(scatter);
-
+            Vector3 normal = LinearAlgebra.SmallestEigenvector(scatter);
             normal = LinearAlgebra.UndoWeightDistortion(normal, settings.channelWeights);
             data.planeNormal = normal;
 
@@ -53,7 +48,6 @@ namespace TwoChannelColorEncoding
             Vector3 bc2 = data.bc2;
             Vector3 fx = data.fx;
             Vector3 fy = data.fy;
-            bool clamp = settings.clampHueFactor;
             float gamma = settings.gamma;
 
             double sumError2 = 0.0;
@@ -70,12 +64,12 @@ namespace TwoChannelColorEncoding
 
                 float lum = ColorSpace.Luminance(linear);
                 float encLum = ColorEncoding.EncodeLuminance(lum);
-                float t = ColorEncoding.ComputeHueFactor(linear, bc1, bc2, fx, fy, clamp);
+                float t = ColorEncoding.ComputeHueFactor(linear, bc1, bc2, fx, fy);
 
                 data.hueValues[i] = t;
                 data.encodedPixels[i] = new Color(encLum, t, 0f, 1f);
 
-                Vector3 decoded = ColorEncoding.DecodeColor(encLum, t, bc1, bc2, clamp);
+                Vector3 decoded = ColorEncoding.DecodeColor(encLum, t, bc1, bc2);
                 Vector3 diff = linear - decoded;
                 float e2 = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
                 sumError2 += e2;
@@ -99,8 +93,6 @@ namespace TwoChannelColorEncoding
 
             if (data.metrics.rmsError > EncodingConstants.DefaultRmsWarningThreshold)
                 data.warnings.Add($"RMS error ({data.metrics.rmsError:F4}) exceeds {EncodingConstants.DefaultRmsWarningThreshold}. Color gamut may be too wide for 2-channel approximation.");
-            if (data.metrics.avgHueRange > EncodingConstants.DefaultHueRangeWarningThreshold && !settings.clampHueFactor)
-                data.warnings.Add($"Hue factor range ({data.metrics.avgHueRange:F2}) is large. Consider enabling clamp.");
         }
     }
 }

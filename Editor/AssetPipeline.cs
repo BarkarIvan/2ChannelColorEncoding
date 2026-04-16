@@ -124,7 +124,6 @@ namespace TwoChannelColorEncoding
             metaAsset.sourceSize = new Vector2Int(width, height);
             metaAsset.rmsError = data.metrics.rmsError;
             metaAsset.maxError = data.metrics.maxError;
-            metaAsset.clampHueFactor = settings.clampHueFactor;
             metaAsset.sourceAssetPath = assetPath;
             metaAsset.extraTextureB = settings.extraTextureB;
             metaAsset.extraSourceB = settings.extraSourceB;
